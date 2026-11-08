@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="AZ-900 practice: 24 sessions x 100 questions mapped to the official skills measured.">
+<style>:root{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>AZ-900 Practice Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: a study desk. Slim top bar, then either the 24-session board or one session
+   with Learn / Practice tabs. Practice = question card + 100-cell answer map. */
+:root{
+  --bg:#f3f5f8; --panel:#ffffff; --ink:#152033; --muted:#5b6678; --line:#dce2ea;
+  --accent:#1d5bd6; --accent-ink:#ffffff; --accent-soft:#e6eefc;
+  --d1:#0f8a7e; --d2:#1d5bd6; --d3:#b4610f;
+  --ok:#17824a; --ok-soft:#e3f4ea; --bad:#c23a32; --bad-soft:#fbe7e5; --flag:#b8860b;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f141c; --panel:#171e29; --ink:#e6ebf2; --muted:#9aa6b8; --line:#2a3443;
+  --accent:#6d9bff; --accent-ink:#0b1020; --accent-soft:#1d2a44;
+  --d1:#3cc4b4; --d2:#6d9bff; --d3:#e9a254;
+  --ok:#4fcf86; --ok-soft:#163323; --bad:#ff7a70; --bad-soft:#3a1a18; --flag:#e7c04b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f141c; --panel:#171e29; --ink:#e6ebf2; --muted:#9aa6b8; --line:#2a3443;
+  --accent:#6d9bff; --accent-ink:#0b1020; --accent-soft:#1d2a44;
+  --d1:#3cc4b4; --d2:#6d9bff; --d3:#e9a254;
+  --ok:#4fcf86; --ok-soft:#163323; --bad:#ff7a70; --bad-soft:#3a1a18; --flag:#e7c04b; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--f-body);margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--panel)}
+a{color:var(--accent)}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--panel);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;gap:16px;padding-block:10px;flex-wrap:wrap}
+.brand{font:800 20px/1 var(--f-display);letter-spacing:-.01em;text-decoration:none;color:var(--ink);display:flex;align-items:center;gap:8px}
+.brand i{width:22px;height:22px;border-radius:5px;background:linear-gradient(135deg,var(--d1),var(--d2) 55%,var(--d3));display:inline-block}
+nav.links{display:flex;gap:4px;flex:1}
+nav.links a{padding:6px 10px;border-radius:6px;text-decoration:none;color:var(--muted);font-weight:700;font-size:14px}
+nav.links a[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
+.sync{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.sync b{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block}
+.sync[data-s="synced"] b{background:var(--ok)} .sync[data-s="saving"] b{background:var(--flag)} .sync[data-s="error"] b{background:var(--bad)}
+main{padding-block:24px 64px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.015em}
+h1{font-size:clamp(26px,4vw,36px);font-weight:800;line-height:1.1}
+h2{font-size:22px;font-weight:800}
+h3{font-size:17px;font-weight:600}
+.muted{color:var(--muted)}
+.mono{font-family:var(--f-mono);font-size:13px}
+.eyebrow{font:700 12px/1 var(--f-body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.stack{display:flex;flex-direction:column;gap:16px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.btn{border:1px solid var(--line);background:var(--panel);padding:9px 16px;border-radius:8px;font-weight:700;font-size:15px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.small{padding:5px 10px;font-size:13px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
+/* Home */
+.hero{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;align-items:stretch}
+.hero>*{min-width:0}
+.hero .intro{padding:24px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-radius:var(--r);overflow:hidden;border:1px solid var(--line)}
+.stats div{background:var(--panel);padding:16px}
+.stats strong{display:block;font:800 28px/1.1 var(--f-display);font-variant-numeric:tabular-nums}
+.weights{display:flex;height:10px;border-radius:5px;overflow:hidden;margin-top:14px}
+.weights span{display:block}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.dom-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:32px 0 12px}
+.dom-head .w{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.card{display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:var(--r);border:1px solid var(--line);background:var(--panel);text-decoration:none;color:inherit;border-top:3px solid var(--dc)}
+a.card:hover{border-color:var(--dc)}
+.card.locked{opacity:.62}
+.card .num{font:600 13px/1 var(--f-mono);color:var(--dc)}
+.card h3{font-size:16px;line-height:1.3}
+.card .meta{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);gap:8px}
+.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar span{display:block;height:100%;background:var(--dc)}
+.pill{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.pill.done{background:var(--ok-soft);color:var(--ok)}
+.pill.soon{background:transparent;border:1px dashed var(--line);color:var(--muted)}
+/* Session */
+.sess-head{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:20px}
+.tabs a{padding:10px 14px;text-decoration:none;color:var(--muted);font-weight:700;border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs a[aria-current="page"]{color:var(--ink);border-color:var(--accent)}
+.learn{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.learn section{padding:20px}
+.learn section.wide{grid-column:1/-1}
+.learn ul{margin:10px 0 0;padding-left:20px}
+.learn li{margin:6px 0}
+dl.terms{margin:10px 0 0;display:grid;grid-template-columns:minmax(120px,max-content) 1fr;gap:8px 16px}
+dl.terms dt{font-weight:700}
+dl.terms dd{margin:0;color:var(--ink)}
+.trap li::marker{color:var(--bad)}
+.practice{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+.qcard{padding:24px}
+.qmeta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.tag{font-size:12px;padding:2px 8px;border-radius:5px;border:1px solid var(--line);color:var(--muted)}
+.tag.B{color:var(--d1);border-color:var(--d1)} .tag.I{color:var(--d2);border-color:var(--d2)} .tag.A{color:var(--d3);border-color:var(--d3)}
+.qtext{font-size:18px;white-space:pre-line;margin:0 0 18px}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:start;text-align:left;padding:12px 14px;border:1.5px solid var(--line);border-radius:9px;background:var(--panel)}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt .l{font:700 14px/26px var(--f-mono);width:28px;height:28px;border-radius:6px;background:var(--bg);text-align:center}
+.opt:disabled{cursor:default}
+.opt.correct{border-color:var(--ok);background:var(--ok-soft)} .opt.correct .l{background:var(--ok);color:var(--panel)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)} .opt.wrong .l{background:var(--bad);color:var(--panel)}
+.verdict{margin-top:20px;padding:16px 18px;border-radius:9px;border-left:4px solid var(--ok);background:var(--ok-soft)}
+.verdict.bad{border-color:var(--bad);background:var(--bad-soft)}
+.verdict h3{margin-bottom:6px}
+.explain{margin-top:16px;display:flex;flex-direction:column;gap:12px}
+.explain ul{margin:4px 0 0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.explain li{display:grid;grid-template-columns:28px 1fr;gap:6px}
+.explain li b{font-family:var(--f-mono);color:var(--bad)}
+.tipbox{padding:12px 14px;border-radius:8px;background:var(--accent-soft)}
+.qnav{display:flex;justify-content:space-between;gap:10px;margin-top:22px;flex-wrap:wrap}
+.side{padding:16px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 70px)}
+.score{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;margin-bottom:14px}
+.score strong{display:block;font:800 22px/1.1 var(--f-display);font-variant-numeric:tabular-nums}
+.score span{font-size:12px;color:var(--muted)}
+.filters{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px}
+.filters button{border:1px solid var(--line);background:transparent;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:700;color:var(--muted)}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+.map{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+.map button{aspect-ratio:1;max-width:100%;border:1px solid var(--line);background:var(--bg);border-radius:4px;font:500 10px/1 var(--f-mono);padding:0;position:relative;color:var(--muted)}
+.map button.ok{background:var(--ok);border-color:var(--ok);color:var(--panel)}
+.map button.no{background:var(--bad);border-color:var(--bad);color:var(--panel)}
+.map button.cur{outline:2px solid var(--ink);outline-offset:1px}
+.map button.fl::after{content:"";position:absolute;top:1px;right:1px;width:5px;height:5px;border-radius:50%;background:var(--flag)}
+.map button.dim{opacity:.25}
+.keys{font-size:12px;color:var(--muted);margin-top:12px}
+kbd{font-family:var(--f-mono);font-size:11px;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 4px}
+.confirm{margin-top:10px;padding:10px;border-radius:8px;background:var(--bad-soft);font-size:14px}
+.syl{padding:20px}
+.syl table{width:100%;border-collapse:collapse;font-size:14px}
+.syl td,.syl th{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.syl th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.scroll{overflow-x:auto}
+.empty{padding:40px;text-align:center}
+@media (max-width:860px){.hero,.practice,.learn{grid-template-columns:minmax(0,1fr)}.side{position:static}.learn section.wide{grid-column:auto}}
+@media (max-width:480px){.stats strong{font-size:22px}.qcard{padding:16px}.qtext{font-size:17px}dl.terms{grid-template-columns:1fr}dl.terms dd{margin-bottom:6px}.sync span{display:none}}
+@media (prefers-reduced-motion:no-preference){.verdict{animation:rise .25s ease-out}@keyframes rise{from{transform:translateY(4px);opacity:.6}to{transform:none;opacity:1}}}
+</style>
+
+<header class="top"><div class="wrap">
+  <a class="brand" href="#home"><i></i>AZ-900 Practice Lab</a>
+  <nav class="links">
+    <a href="#home" data-nav="home">Sessions</a>
+    <a href="#syllabus" data-nav="syllabus">Syllabus</a>
+  </nav>
+  <div class="sync" id="sync" data-s="local" title="Where your progress is saved"><b></b><span id="syncText">Saved in this browser</span></div>
+</div></header>
+<main class="wrap" id="app"><div class="empty muted">Loading the question bank…</div></main>
+
+<script>
+(() => {
+const L = ['A','B','C','D'];
+const DOM = {D1:'var(--d1)', D2:'var(--d2)', D3:'var(--d3)'};
+const LS = 'az900-progress-v1';
+const S = { plan:null, sess:{}, prog:{a:{}, f:{}, last:null, cur:{}}, filter:'all', confirmReset:false };
+const $app = document.getElementById('app');
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad = n => String(n).padStart(2,'0');
+const short = id => id.replace('AZ900-','');
+
+/* ---------- progress storage: browser first, account sync when available ---------- */
+try { const v = JSON.parse(localStorage.getItem(LS)); if (v && v.a) S.prog = Object.assign(S.prog, v); } catch(e) {}
+let dbRef = null, writing = false, pending = false, timer = null;
+function setSync(s, text){ const el=document.getElementById('sync'); el.dataset.s=s; document.getElementById('syncText').textContent=text; }
+function saveLocal(){ try { localStorage.setItem(LS, JSON.stringify(S.prog)); } catch(e) {} }
+function save(){
+  saveLocal();
+  if (!dbRef) return;
+  clearTimeout(timer); timer = setTimeout(flush, 1200);
+}
+async function flush(){
+  if (!dbRef) return;
+  if (writing){ pending = true; return; }
+  writing = true; setSync('saving','Saving…');
+  try { await dbRef.set(JSON.parse(JSON.stringify(S.prog))); setSync('synced','Synced to your account'); }
+  catch(e){ if (e && (e.code==='invalid_argument'||e.code==='revoked'||e.code==='not_granted')){ dbRef=null; setSync('local','Saved in this browser'); } else setSync('error','Sync paused, saved in this browser'); }
+  writing = false;
+  if (pending){ pending = false; flush(); }
+}
+function merge(remote){
+  if (!remote) return false; let changed=false;
+  for (const k of ['a','f']) for (const [id,v] of Object.entries(remote[k]||{})) {
+    const mine = S.prog[k][id]; if (!mine || (v[1]||0) > (mine[1]||0)) { S.prog[k][id]=v; changed=true; }
+  }
+  if (remote.last && (!S.prog.last || remote.last.t > S.prog.last.t)) { S.prog.last = remote.last; changed=true; }
+  for (const [s,i] of Object.entries(remote.cur||{})) if (S.prog.cur[s]===undefined){ S.prog.cur[s]=i; changed=true; }
+  return changed;
+}
+async function initSync(){
+  if (!window.claude || !window.claude.use) return;
+  try {
+    const [db, user] = await Promise.all([window.claude.use('db'), window.claude.use('user')]);
+    if (!db || !user) return;
+    const id = await user.id(); if (!id) return;
+    const ref = db.doc('data/users/' + id + '/progress');
+    setSync('saving','Connecting…');
+    const snap = await Promise.race([ref.get(), new Promise((_,rej)=>setTimeout(()=>rej({code:'timeout'}),10000))]);
+    dbRef = ref;
+    const changed = snap.exists && merge(snap.data());
+    saveLocal(); setSync('synced','Synced to your account');
+    if (changed) render();
+    if (!snap.exists || Object.keys(S.prog.a).length) flush();
+  } catch(e){ setSync('local','Saved in this browser'); }
+}
+
+/* ---------- data ---------- */
+const sessionById = n => S.plan.sessions.find(s => s.n === n);
+const isBuilt = n => (S.plan.built||[]).some(b => b.n === n);
+async function loadSession(n){
+  if (S.sess[n]) return S.sess[n];
+  const r = await fetch('sessions/s' + pad(n) + '.json'); if (!r.ok) throw new Error('missing');
+  return (S.sess[n] = await r.json());
+}
+function stats(n){
+  const pre = 'AZ900-S' + pad(n) + '-'; let done=0, ok=0;
+  for (const [id,v] of Object.entries(S.prog.a)) if (id.startsWith(pre) && v && v[0]>=0) { done++; if (v[2]) ok++; }
+  return {done, ok};
+}
+/* An answer entry is [choice, time, correct]. A cleared answer stays as a dated [-1,…] entry
+   so an older copy on another device can't bring it back when the two merge. */
+const answerOf = id => { const v = S.prog.a[id]; return v && v[0]>=0 ? v : null; };
+function tombstone(id){ S.prog.a[id] = [-1, Date.now(), 0]; }
+
+/* ---------- views ---------- */
+function setNav(k){ document.querySelectorAll('[data-nav]').forEach(a => { if (a.dataset.nav===k) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); }); }
+
+function viewHome(){
+  setNav('home');
+  const P = S.plan; let done=0, ok=0, completed=0;
+  P.sessions.forEach(s => { const st=stats(s.n); done+=st.done; ok+=st.ok; if (st.done>=100) completed++; });
+  const built = (P.built||[]).length;
+  const last = S.prog.last;
+  const resume = last && isBuilt(last.s) ? `<a class="btn primary" href="#s${pad(last.s)}-practice">Resume Session ${pad(last.s)}, question ${(S.prog.cur[last.s]||0)+1}</a>` : `<a class="btn primary" href="#s01-learn">Start Session 01</a>`;
+  let html = `<div class="hero">
+    <div class="panel intro stack">
+      <span class="eyebrow">Microsoft Azure Fundamentals</span>
+      <h1>Your AZ-900 practice bank</h1>
+      <p class="muted" style="margin:0">24 sessions of 100 original questions, mapped to the official skills measured (${esc(P.guideVersion.split(' (')[0].replace('Skills measured ','').replace('as of','as of'))}). Read the learning notes first, then practise with instant explanations. Your answers save as you go.</p>
+      <div class="row">${resume}<a class="btn" href="#syllabus">See the syllabus</a></div>
+    </div>
+    <div class="stack">
+      <div class="stats">
+        <div><strong>${done}</strong><span class="muted">of 2,400 answered</span></div>
+        <div><strong>${done? Math.round(ok/done*100)+'%':'–'}</strong><span class="muted">correct so far</span></div>
+        <div><strong>${completed}/24</strong><span class="muted">sessions finished</span></div>
+      </div>
+      <div class="panel" style="padding:16px">
+        <span class="eyebrow">Exam weighting</span>
+        <div class="weights">${P.domains.map(d=>`<span style="flex:${d.questions};background:${DOM[d.id]}"></span>`).join('')}</div>
+        <div class="legend">${P.domains.map(d=>`<span><i style="background:${DOM[d.id]}"></i>${esc(d.name.replace('Describe ',''))} ${esc(d.weight)}</span>`).join('')}</div>
+        <p class="muted" style="font-size:13px;margin:10px 0 0">${built} of 24 sessions published. Pass mark: ${esc(P.passMark)}.</p>
+      </div>
+    </div></div>`;
+  P.domains.forEach(d => {
+    const ss = P.sessions.filter(s => s.domain===d.id);
+    html += `<div class="dom-head"><h2>${esc(d.name)}</h2><span class="w">${esc(d.weight)} · Sessions ${pad(ss[0].n)}–${pad(ss[ss.length-1].n)} · ${d.questions} questions</span></div><div class="grid">`;
+    ss.forEach(s => {
+      const st = stats(s.n), b = isBuilt(s.n);
+      const pill = !b ? `<span class="pill soon">Not built yet</span>` : st.done>=100 ? `<span class="pill done">Done · ${Math.round(st.ok/st.done*100)}%</span>` : st.done ? `<span class="pill">${st.done}/100</span>` : `<span class="pill">Ready</span>`;
+      const inner = `<span class="num">SESSION ${pad(s.n)}</span><h3>${esc(s.title)}</h3>
+        <div class="bar"><span style="width:${st.done}%"></span></div>
+        <div class="meta"><span>Objectives ${esc(s.obj.join(', '))}</span>${pill}</div>`;
+      html += b ? `<a class="card" style="--dc:${DOM[d.id]}" href="#s${pad(s.n)}-learn">${inner}</a>` : `<div class="card locked" style="--dc:${DOM[d.id]}">${inner}</div>`;
+    });
+    html += `</div>`;
+  });
+  $app.innerHTML = html;
+}
+
+function viewSyllabus(){
+  setNav('syllabus');
+  const P = S.plan;
+  let html = `<div class="sess-head"><span class="eyebrow">Phase 1 · Research</span><h1>Official AZ-900 syllabus</h1>
+    <p class="muted" style="margin:0">${esc(P.guideVersion)}. Verified ${esc(P.verified)} against the <a href="${esc(P.guideUrl)}" target="_blank" rel="noopener">official study guide</a>.</p></div><div class="stack">`;
+  P.domains.forEach(d => {
+    html += `<section class="panel syl"><div class="dom-head" style="margin-top:0"><h2 style="color:${DOM[d.id]}">${esc(d.name)}</h2><span class="w">${esc(d.weight)} · ${d.questions} questions planned</span></div><div class="scroll"><table><thead><tr><th>Code</th><th>Objective</th><th>Sessions</th></tr></thead><tbody>`;
+    d.groups.forEach(g => {
+      html += `<tr><td colspan="3"><strong>${esc(g.id)} ${esc(g.name)}</strong></td></tr>`;
+      g.objectives.forEach(([id,n]) => { const ss = P.sessions.filter(s=>s.obj.includes(id)).map(s=>pad(s.n)).join(', '); html += `<tr><td class="mono">${id}</td><td>${esc(n)}</td><td class="mono">${ss||'—'}</td></tr>`; });
+    });
+    html += `</tbody></table></div></section>`;
+  });
+  html += `<section class="panel syl"><h2>Topics outside the current objectives</h2><ul>${P.notInObjectives.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section>
+  <section class="panel syl"><h2>How every session is validated</h2><ul>
+    <li>Exactly 100 questions with unique IDs, each mapped to an official objective code.</li>
+    <li>Four distinct options, one defensible answer, and an explanation for every wrong option.</li>
+    <li>Answer letters balanced 25/25/25/25 per session, never the same letter twice in a row, no A-B-C runs.</li>
+    <li>Word-overlap fingerprint compared against every earlier question; pairs above 0.55 similarity are rewritten.</li>
+    <li>Difficulty target 30% beginner, 50% intermediate, 20% advanced; no placeholder text; references to Microsoft Learn or Azure docs.</li>
+    <li>Technical facts reviewed against current Microsoft documentation; changeable details (prices, offers) are flagged in the explanation.</li>
+  </ul></section></div>`;
+  $app.innerHTML = html;
+}
+
+async function viewSession(n, tab){
+  setNav('');
+  const meta = sessionById(n);
+  if (!meta || !isBuilt(n)) { $app.innerHTML = `<div class="panel empty"><h2>Session ${pad(n)} isn't built yet</h2><p class="muted">Sessions are added one at a time after validation.</p><a class="btn" href="#home">Back to sessions</a></div>`; return; }
+  let data; try { data = await loadSession(n); } catch(e){ $app.innerHTML = `<div class="panel empty"><h2>Couldn't load Session ${pad(n)}</h2><p class="muted">Check your connection and reload the page.</p></div>`; return; }
+  const d = S.plan.domains.find(x=>x.id===meta.domain);
+  const head = `<div class="sess-head"><a href="#home" class="muted" style="font-size:14px">← All sessions</a>
+    <span class="eyebrow" style="color:${DOM[d.id]}">Session ${pad(n)} · ${esc(d.name)}</span><h1>${esc(meta.title)}</h1></div>
+    <nav class="tabs"><a href="#s${pad(n)}-learn" ${tab==='learn'?'aria-current="page"':''}>Learn</a><a href="#s${pad(n)}-practice" ${tab==='practice'?'aria-current="page"':''}>Practice · ${stats(n).done}/100</a></nav>`;
+  if (tab === 'learn') {
+    const l = data.learn;
+    const list = (arr, cls='') => `<ul class="${cls}">${arr.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
+    const dl = arr => `<dl class="terms">${arr.map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>`;
+    const sec = (key, title, body, wide) => (l[key] && l[key].length) ? `<section class="panel${wide?' wide':''}"><h2>${title}</h2>${body(l[key])}</section>` : '';
+    $app.innerHTML = head + `<div class="learn">
+      ${sec('objectives','Learning objectives',a=>list(a),true)}
+      ${sec('concepts','Key concepts',dl,true)}
+      ${sec('terms','Terminology',dl)}
+      ${sec('services',"Azure services you'll meet",dl)}
+      ${sec('examples','Practical examples',a=>list(a))}
+      ${sec('comparisons','Comparisons',dl)}
+      ${sec('traps','Common exam traps',a=>list(a,'trap'))}
+      ${sec('revision','Quick revision',a=>list(a))}
+      <section class="panel wide row" style="justify-content:space-between"><span>Ready? 100 questions, explanations after each answer.</span><a class="btn primary" href="#s${pad(n)}-practice">Start practice</a></section>
+    </div>`;
+    return;
+  }
+  renderPractice(n, data, head);
+}
+
+function visibleIdx(qs){
+  return qs.map((q,i)=>i).filter(i => {
+    const a = answerOf(qs[i].id), f = S.prog.f[qs[i].id];
+    if (S.filter==='todo') return !a; if (S.filter==='wrong') return a && !a[2]; if (S.filter==='flag') return f && f[0]; return true;
+  });
+}
+
+function renderPractice(n, data, head){
+  const qs = data.questions;
+  let i = Math.min(S.prog.cur[n]||0, qs.length-1);
+  const q = qs[i], ans = answerOf(q.id), fl = S.prog.f[q.id] && S.prog.f[q.id][0];
+  const st = stats(n);
+  const vis = visibleIdx(qs); const visSet = new Set(vis);
+  const pos = vis.indexOf(i);
+  const prevI = pos>0 ? vis[pos-1] : (pos===-1 ? [...vis].reverse().find(x=>x<i) : undefined);
+  const nextI = pos>=0 ? vis[pos+1] : vis.find(x=>x>i);
+  const sel = ans ? ans[0] : -1, ci = L.indexOf(q.a);
+  const opts = q.opts.map((o,k) => {
+    let cls = ''; if (ans) { if (k===ci) cls='correct'; else if (k===sel) cls='wrong'; }
+    return `<button class="opt ${cls}" data-pick="${k}" ${ans?'disabled':''}><span class="l">${L[k]}</span><span>${esc(o)}</span></button>`;
+  }).join('');
+  const wrongs = q.why.map((w,k)=> w ? `<li><b>${L[k]}</b><span>${esc(w)}</span></li>` : '').join('');
+  const extra = [
+    q.e ? `<div><span class="eyebrow">Explanation</span><p style="margin:6px 0 0">${esc(q.e)}</p></div>` : '',
+    wrongs ? `<div><span class="eyebrow">Why the other options are wrong</span><ul>${wrongs}</ul></div>` : '',
+    q.tip ? `<div class="tipbox"><strong>Exam tip:</strong> ${esc(q.tip)}</div>` : '',
+    q.ref ? `<div class="muted" style="font-size:14px">Reference: <a href="${esc(q.ref)}" target="_blank" rel="noopener">${esc(q.ref.replace('https://',''))}</a></div>` : ''].join('');
+  const fb = ans ? `<div class="verdict ${ans[2]?'':'bad'}" role="status"><h3>${ans[2]?'Correct':'Not quite. The answer is '+q.a}</h3><div><strong>${q.a}. ${esc(q.opts[ci])}</strong></div></div>
+    ${extra ? `<div class="explain">${extra}</div>` : ''}` : '';
+  const cells = qs.map((x,k)=>{ const a=answerOf(x.id), f=S.prog.f[x.id]&&S.prog.f[x.id][0];
+    return `<button data-go="${k}" class="${a?(a[2]?'ok':'no'):''} ${k===i?'cur':''} ${f?'fl':''} ${visSet.has(k)?'':'dim'}" aria-label="Question ${k+1}${a?(a[2]?', correct':', incorrect'):''}${f?', flagged':''}">${k+1}</button>`; }).join('');
+  const F = [['all','All'],['todo','Unanswered'],['wrong','Incorrect'],['flag','Flagged']];
+  $app.innerHTML = head + `<div class="practice">
+    <article class="panel qcard">
+      <div class="qmeta"><span class="mono muted">${short(q.id)}</span><span class="tag ${q.d[0]}">${esc(q.d)}</span><span class="tag">${esc(q.y)}</span><span class="tag">${esc(q.o)} ${esc(q.t)}</span></div>
+      <p class="qtext">${esc(q.q)}</p>
+      <div class="opts">${opts}</div>
+      ${fb}
+      <div class="qnav">
+        <button class="btn" data-go="${prevI??''}" ${prevI===undefined?'disabled':''}>← Previous</button>
+        <div class="row">
+          <button class="btn small" data-flag>${fl?'Unflag':'Flag for review'}</button>
+          ${ans?'<button class="btn small" data-retry>Try again</button>':''}
+        </div>
+        <button class="btn primary" data-go="${nextI??''}" ${nextI===undefined?'disabled':''}>Next →</button>
+      </div>
+    </article>
+    <aside class="panel side">
+      <div class="score"><div><strong>${st.done}</strong><span>answered</span></div><div><strong>${st.ok}</strong><span>correct</span></div><div><strong>${st.done?Math.round(st.ok/st.done*100)+'%':'–'}</strong><span>accuracy</span></div></div>
+      <div class="filters">${F.map(([k,t])=>`<button data-filter="${k}" aria-pressed="${S.filter===k}">${t}</button>`).join('')}</div>
+      <div class="map">${cells}</div>
+      <p class="keys"><kbd>A</kbd>–<kbd>D</kbd> answer · <kbd>←</kbd><kbd>→</kbd> move · <kbd>F</kbd> flag</p>
+      ${S.confirmReset ? `<div class="confirm">Clear all ${st.done} answers in this session? This can't be undone.<div class="row" style="margin-top:8px"><button class="btn small" data-reset="yes">Clear answers</button><button class="btn small" data-reset="no">Keep them</button></div></div>` : `<button class="btn small" data-reset="ask" ${st.done?'':'disabled'} style="margin-top:6px">Reset this session</button>`}
+    </aside></div>`;
+  S.view = {n, qs, i, prevI, nextI, ans: !!ans};
+}
+
+/* ---------- actions ---------- */
+function go(k){ const v=S.view; if (!v || k===undefined || k==='' || isNaN(k)) return; S.prog.cur[v.n]=+k; S.prog.last={s:v.n,t:Date.now()}; save(); render(); window.scrollTo({top:0}); }
+function pick(k){ const v=S.view; if (!v || v.ans) return; const q=v.qs[v.i]; S.prog.a[q.id]=[k,Date.now(),L[k]===q.a?1:0]; S.prog.last={s:v.n,t:Date.now()}; save(); render(); }
+$app.addEventListener('click', e => {
+  const t = e.target.closest('button'); if (!t) return;
+  if (t.dataset.pick!==undefined) return pick(+t.dataset.pick);
+  if (t.dataset.go!==undefined) return go(t.dataset.go);
+  if (t.dataset.filter){ S.filter=t.dataset.filter; return render(); }
+  if (t.hasAttribute('data-flag')){ const id=S.view.qs[S.view.i].id; const cur=S.prog.f[id]&&S.prog.f[id][0]; S.prog.f[id]=[cur?0:1,Date.now()]; save(); return render(); }
+  if (t.hasAttribute('data-retry')){ tombstone(S.view.qs[S.view.i].id); save(); return render(); }
+  if (t.dataset.reset==='ask'){ S.confirmReset=true; return render(); }
+  if (t.dataset.reset==='no'){ S.confirmReset=false; return render(); }
+  if (t.dataset.reset==='yes'){ S.view.qs.forEach(q=>tombstone(q.id)); S.prog.cur[S.view.n]=0; S.confirmReset=false; save(); return render(); }
+});
+document.addEventListener('keydown', e => {
+  if (!S.view || !location.hash.includes('practice') || e.ctrlKey || e.metaKey || e.altKey) return;
+  const k = e.key.toLowerCase();
+  const idx = ['a','b','c','d'].indexOf(k); const num = ['1','2','3','4'].indexOf(k);
+  if (idx>=0 || num>=0) { pick(idx>=0?idx:num); e.preventDefault(); }
+  else if (k==='arrowright' || k==='n') go(S.view.nextI);
+  else if (k==='arrowleft' || k==='p') go(S.view.prevI);
+  else if (k==='f') document.querySelector('[data-flag]')?.click();
+});
+
+function render(){
+  if (!S.plan) return;
+  const h = (location.hash||'#home').slice(1);
+  S.view = null;
+  const m = h.match(/^s(\d\d)(?:-(learn|practice))?$/);
+  if (m) viewSession(+m[1], m[2]||'learn');
+  else if (h==='syllabus') viewSyllabus();
+  else viewHome();
+}
+window.addEventListener('hashchange', () => { S.confirmReset=false; render(); window.scrollTo({top:0}); });
+fetch('plan.json').then(r=>r.json()).then(p => { S.plan=p; render(); initSync(); })
+  .catch(() => { $app.innerHTML = '<div class="panel empty"><h2>The question bank didn\'t load</h2><p class="muted">Reload the page to try again.</p></div>'; });
+})();
+</script>
+
+</body>
+</html>
